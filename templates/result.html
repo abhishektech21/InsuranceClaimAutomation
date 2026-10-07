@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-50">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InsureAI | Claim Assessment Result</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="min-h-full flex flex-col text-slate-900 bg-slate-50">
+
+    <!-- Header / Navigation -->
+    <header class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200/80">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="flex h-16 items-center justify-between">
+                <!-- Logo & Brand -->
+                <div class="flex items-center gap-x-4">
+                    <a href="./" class="flex items-center gap-x-3 group">
+                        <svg class="h-9 w-auto text-blue-600 transition-transform group-hover:scale-105" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.75h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+                        </svg>
+                        <div class="flex flex-col">
+                            <span class="text-lg font-bold tracking-tight text-blue-900">InsureAI</span>
+                            <span class="text-[10px] font-medium text-slate-500 tracking-wider uppercase">Insurance Claim Service</span>
+                        </div>
+                    </a>
+                </div>
+                
+                <!-- Home Link -->
+                <div class="flex items-center">
+                    <a href="./" class="inline-flex items-center gap-x-1 text-sm font-semibold text-blue-600 hover:text-blue-700 transition-colors">
+                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+                        </svg>
+                        Back to Portal
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="flex-grow py-12">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            
+            <!-- Assessment Status Banner -->
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-y-4">
+                <div>
+                    <h1 class="text-2xl font-bold tracking-tight text-slate-900">Claim Assessment Report</h1>
+                    <p class="text-xs text-slate-500 mt-1">Verification processed automatically via InsureAI Document Extraction.</p>
+                </div>
+                
+                <!-- Dynamic Status Badge (controlled by JS below based on report outcome) -->
+                <div>
+                    <span id="status-badge" class="inline-flex items-center gap-x-1.5 rounded-full bg-blue-50 px-3.5 py-2 text-sm font-bold text-blue-700 ring-1 ring-inset ring-blue-600/20">
+                        <span id="status-badge-dot" class="h-2 w-2 rounded-full bg-blue-500 animate-pulse"></span>
+                        <span id="status-badge-text">Processing Review</span>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Two-Column Grid: Claim Metadata & AI Analysis -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                
+                <!-- Left: Metadata Grid Summary (4 cols on lg) -->
+                <div class="lg:col-span-5 space-y-6">
+                    <div class="bg-white rounded-3xl border border-slate-200/90 shadow-sm overflow-hidden">
+                        <div class="bg-slate-50/50 border-b border-slate-100 px-6 py-5">
+                            <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider">Submitted Claim Details</h3>
+                            <p class="text-xs text-slate-500 mt-0.5">Overview of user-reported parameters</p>
+                        </div>
+                        
+                        <div class="divide-y divide-slate-100 px-6 py-2">
+                            <!-- Name -->
+                            <div class="py-3.5 flex justify-between items-start gap-x-4">
+                                <span class="text-xs font-bold text-slate-500 uppercase tracking-wide mt-0.5">Patient Name</span>
+                                <span class="text-sm font-semibold text-slate-900 text-right">{{name}}</span>
+                            </div>
+                            <!-- Date of Treatment -->
+                            <div class="py-3.5 flex justify-between items-start gap-x-4">
+                                <span class="text-xs font-bold text-slate-500 uppercase tracking-wide mt-0.5">Date of Treatment</span>
+                                <span class="text-sm font-semibold text-slate-900 text-right">{{date}}</span>
+                            </div>
+                            <!-- Facility -->
+                            <div class="py-3.5 flex justify-between items-start gap-x-4">
+                                <span class="text-xs font-bold text-slate-500 uppercase tracking-wide mt-0.5">Medical Facility</span>
+                                <span class="text-sm font-semibold text-slate-900 text-right">{{medical_facility}}</span>
+                            </div>
+                            <!-- Claim Item -->
+                            <div class="py-3.5 flex justify-between items-start gap-x-4">
+                                <span class="text-xs font-bold text-slate-500 uppercase tracking-wide mt-0.5">Claim Item</span>
+                                <span class="text-sm font-semibold text-slate-900 text-right">{{claim_type}}</span>
+                            </div>
+                            <!-- Claim Reason -->
+                            <div class="py-3.5 flex justify-between items-start gap-x-4">
+                                <span class="text-xs font-bold text-slate-500 uppercase tracking-wide mt-0.5">Claim Reason</span>
+                                <span class="text-sm font-semibold text-slate-900 text-right text-indigo-700">{{claim_reason}}</span>
+                            </div>
+                            <!-- Claim Amount -->
+                            <div class="py-3.5 flex justify-between items-start gap-x-4">
+                                <span class="text-xs font-bold text-slate-500 uppercase tracking-wide mt-0.5">Requested Amount</span>
+                                <span class="text-sm font-extrabold text-blue-700 text-right">${{total_claim_amount}}</span>
+                            </div>
+                            <!-- Patient Address -->
+                            <div class="py-3.5 flex flex-col gap-y-1">
+                                <span class="text-xs font-bold text-slate-500 uppercase tracking-wide">Patient Address</span>
+                                <span class="text-sm font-medium text-slate-700">{{address}}</span>
+                            </div>
+                            <!-- Description -->
+                            <div class="py-3.5 flex flex-col gap-y-1">
+                                <span class="text-xs font-bold text-slate-500 uppercase tracking-wide">Description</span>
+                                <span class="text-sm font-medium text-slate-700">{{description}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: AI Output (7 cols on lg) -->
+                <div class="lg:col-span-7">
+                    <div class="bg-white rounded-3xl border border-slate-200/90 shadow-sm overflow-hidden">
+                        <div class="bg-slate-50/50 border-b border-slate-100 px-6 py-5 flex items-center justify-between">
+                            <div>
+                                <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider">AI Audit & Verification Output</h3>
+                                <p class="text-xs text-slate-500 mt-0.5">Compliance report, exclusions, and financial limits check</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Report Document Sheet -->
+                        <div class="p-6 sm:p-8 bg-slate-50/20">
+                            <div class="bg-white rounded-2xl border border-slate-200 shadow-inner p-6 sm:p-8 min-h-[350px]">
+                                <!-- Report header watermark style -->
+                                <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-6">
+                                    <span class="text-[10px] font-bold text-slate-400 tracking-widest uppercase">AUDIT COMPLIANCE REPORT</span>
+                                    <span class="text-[10px] font-mono text-slate-400">REF: INSURE-AI-{{date}}</span>
+                                </div>
+                                
+                                <!-- Render dynamic HTML output -->
+                                <div id="report-output" class="text-sm leading-relaxed text-slate-700 whitespace-normal prose prose-slate max-w-none">
+                                    {{ output | safe }}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Footer info box -->
+                        <div class="border-t border-slate-100 px-6 py-4 bg-slate-50/50 flex items-start gap-x-2.5">
+                            <svg class="h-5 w-5 text-slate-400 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 111.083.985l-.04.025m-.083-.004l-.041.02a.75.75 0 11-1.083-.985l.04-.025M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <p class="text-[10px] text-slate-500 leading-normal">
+                                Disclaimer: This automated report is generated using advanced language models trained on standard policies. The financial and exclusion evaluations conform directly with parameters submitted in InsureAI medical directory documents.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Action panel -->
+            <div class="mt-12 flex justify-center">
+                <a href="./" 
+                   class="inline-flex items-center gap-x-2 rounded-xl bg-white border border-slate-300 hover:border-slate-400 px-6 py-3 text-sm font-bold text-slate-700 shadow-sm hover:shadow transition-all">
+                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+                    </svg>
+                    Submit Another Claim Application
+                </a>
+            </div>
+            
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 py-8 border-t border-slate-800">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-y-4">
+            <div class="flex items-center gap-x-2">
+                <svg class="h-6 w-auto text-slate-500 opacity-60" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.75h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+                </svg>
+                <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">InsureAI Health Insurance Claim Automation System</span>
+            </div>
+            <p class="text-xs">&copy; 2026 InsureAI. All rights reserved. Powered by Groq, LangChain & Advanced Document Analysis.</p>
+        </div>
+    </footer>
+
+    <!-- Client-Side status classifier script -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const outputElement = document.getElementById("report-output");
+            const badgeText = document.getElementById("status-badge-text");
+            const badgeBg = document.getElementById("status-badge");
+            const badgeDot = document.getElementById("status-badge-dot");
+
+            if (outputElement && badgeText) {
+                const text = outputElement.innerText || outputElement.textContent;
+                const textLower = text.toLowerCase();
+                
+                // Exclusions or Rejections check
+                const isRejected = textLower.includes("reject") || 
+                                   textLower.includes("rejection") ||
+                                   textLower.includes("exclusion list") || 
+                                   textLower.includes("must be rejected") || 
+                                   textLower.includes("criteria as false");
+                
+                // Success / Approval check
+                const isAccepted = textLower.includes("accepted") || 
+                                   textLower.includes("approved") ||
+                                   textLower.includes("criteria as true");
+
+                if (isRejected) {
+                    badgeText.textContent = "Claim Rejected";
+                    badgeBg.className = "inline-flex items-center gap-x-1.5 rounded-full bg-rose-50 px-3.5 py-2 text-sm font-bold text-rose-700 ring-1 ring-inset ring-rose-600/20";
+                    badgeDot.className = "h-2 w-2 rounded-full bg-rose-500";
+                } else if (isAccepted) {
+                    badgeText.textContent = "Claim Approved";
+                    badgeBg.className = "inline-flex items-center gap-x-1.5 rounded-full bg-emerald-50 px-3.5 py-2 text-sm font-bold text-emerald-700 ring-1 ring-inset ring-emerald-600/20";
+                    badgeDot.className = "h-2 w-2 rounded-full bg-emerald-500";
+                } else {
+                    badgeText.textContent = "Review Completed";
+                    badgeBg.className = "inline-flex items-center gap-x-1.5 rounded-full bg-blue-50 px-3.5 py-2 text-sm font-bold text-blue-700 ring-1 ring-inset ring-blue-600/20";
+                    badgeDot.className = "h-2 w-2 rounded-full bg-blue-500";
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>
